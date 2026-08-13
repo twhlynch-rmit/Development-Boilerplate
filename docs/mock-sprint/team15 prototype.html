@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Team 15 — Login & Team Page Prototype</title>
+<style>
+  :root{
+    --bg:#0a0a0a;
+    --surface:#141414;
+    --border:#2e2e2e;
+    --text-primary:#ffffff;
+    --text-secondary:#949494;
+    --accent-bg:#29334f;
+    --accent:#8cadff;
+    --error:#d96666;
+    --radius:10px;
+    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; font-family:var(--font); background:var(--bg); color:var(--text-primary);
+    min-height:100vh;
+  }
+  .screen{ display:none; min-height:100vh; }
+  .screen.active{ display:block; }
+
+  /* ---------- Login ---------- */
+  #login-screen{ display:flex; align-items:center; justify-content:center; padding:60px 20px; }
+  .login-card{ width:100%; max-width:420px; }
+  .login-card h1{ font-size:26px; font-weight:700; text-align:center; margin:0 0 6px; }
+  .login-card .subtitle{ color:var(--text-secondary); text-align:center; font-size:14px; margin:0 0 24px; }
+  .google-btn{
+    width:100%; padding:12px; border-radius:8px; background:var(--surface); border:1px solid var(--border);
+    color:var(--text-primary); font-size:14px; font-weight:500; cursor:pointer; margin-bottom:20px;
+    display:flex; align-items:center; justify-content:center; gap:10px;
+  }
+  .google-btn:hover{ background:#1c1c1c; }
+  .g-icon{ width:16px; height:16px; border-radius:50%; background:conic-gradient(#4285F4 0 25%, #34A853 25% 50%, #FBBC05 50% 75%, #EA4335 75% 100%); }
+  .divider{ display:flex; align-items:center; gap:10px; color:var(--text-secondary); font-size:11px; margin-bottom:20px; }
+  .divider .line{ flex:1; height:1px; background:var(--border); }
+  .field{ margin-bottom:16px; }
+  .field label{ display:block; font-size:13px; font-weight:500; margin-bottom:6px; }
+  .field input{
+    width:100%; padding:11px 12px; border-radius:8px; background:var(--surface); border:1px solid var(--border);
+    color:var(--text-primary); font-size:14px; font-family:var(--font);
+  }
+  .field input::placeholder{ color:var(--text-secondary); }
+  .field input:focus{ outline:none; border-color:var(--accent); }
+  .submit-btn{
+    width:100%; padding:13px; border-radius:8px; background:#fff; color:#0d0d0d; font-size:14px;
+    font-weight:600; border:none; cursor:pointer; margin:6px 0 16px;
+  }
+  .submit-btn:hover{ background:#e5e5e5; }
+  .bottom-link{ text-align:center; font-size:13px; color:var(--text-secondary); }
+  .bottom-link a{ color:var(--text-primary); text-decoration:underline; cursor:pointer; }
+  .error-msg{ color:var(--error); font-size:12px; text-align:center; margin-top:14px; display:none; }
+  .error-msg.show{ display:block; }
+  .demo-toggle{
+    margin-top:28px; text-align:center; font-size:11px; color:var(--text-secondary);
+  }
+  .demo-toggle a{ color:var(--accent); cursor:pointer; text-decoration:underline; }
+
+  /* ---------- Team page ---------- */
+  #team-screen .topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 40px; border-bottom:1px solid var(--border);
+  }
+  #team-screen .topbar .logo-placeholder{ width:100px; height:22px; background:var(--border); border-radius:3px; }
+  #team-screen .user-row{ display:flex; align-items:center; gap:16px; font-size:13px; color:var(--text-secondary); }
+  #team-screen .user-row .avatar-dot{ width:26px; height:26px; border-radius:50%; background:var(--surface); border:1px solid var(--border); }
+  #team-screen .logout-btn{ background:none; border:none; color:var(--text-secondary); font-size:13px; cursor:pointer; font-family:var(--font); }
+  #team-screen .logout-btn:hover{ color:var(--text-primary); }
+
+  .team-heading{ padding:40px 40px 0; }
+  .team-heading h1{ font-size:26px; margin:0 0 6px; font-weight:700; }
+  .team-heading p{ color:var(--text-secondary); font-size:14px; margin:0; }
+
+  .cards-row{
+    display:flex; flex-wrap:wrap; gap:20px; padding:28px 40px 60px;
+  }
+  .card{
+    width:230px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+    padding:18px;
+  }
+  .avatar{
+    width:48px; height:48px; border-radius:50%; background:var(--accent-bg); color:var(--accent);
+    display:flex; align-items:center; justify-content:center; font-weight:600; font-size:14px; margin-bottom:10px;
+  }
+  .card .name{ font-weight:600; font-size:15px; margin:0 0 2px; }
+  .card .role{ color:var(--text-secondary); font-size:12px; margin:0 0 8px; }
+  .card .blurb{ color:var(--text-secondary); font-size:11.5px; line-height:1.5; margin:0; }
+  .card.edge{ outline:1px dashed var(--accent); outline-offset:-1px; }
+  .card .edge-note{ color:var(--accent); font-size:10.5px; margin-top:8px; }
+</style>
+</head>
+<body>
+
+  <!-- ===================== LOGIN SCREEN ===================== -->
+  <div id="login-screen" class="screen active">
+    <div class="login-card">
+      <h1>Sign in</h1>
+      <p class="subtitle">Enter your credentials to continue</p>
+
+      <button class="google-btn" onclick="showTeam()"><span class="g-icon"></span> Continue with Google</button>
+
+      <div class="divider"><span class="line"></span>OR<span class="line"></span></div>
+
+      <div class="field">
+        <label>Email</label>
+        <input type="email" placeholder="you@example.com" id="email-input">
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" placeholder="Enter your password" id="password-input">
+      </div>
+
+      <button class="submit-btn" onclick="attemptSignIn()">Sign in</button>
+      <p class="bottom-link">Don't have an account? <a onclick="alert('Existing sign-up flow — unchanged by this restyle.')">Create one</a></p>
+
+      <p class="error-msg" id="error-msg">[Existing error message — auth logic unchanged] Invalid email or password.</p>
+
+      <p class="demo-toggle">Prototype demo: <a onclick="toggleError()">simulate invalid login (EC-01)</a></p>
+    </div>
+  </div>
+
+  <!-- ===================== TEAM PAGE SCREEN ===================== -->
+  <div id="team-screen" class="screen">
+    <div class="topbar">
+      <div class="logo-placeholder"></div>
+      <div class="user-row">
+        <span>user@example.com</span>
+        <div class="avatar-dot"></div>
+        <button class="logout-btn" onclick="showLogin()">Log out</button>
+      </div>
+    </div>
+
+    <div class="team-heading">
+      <h1>Team 15</h1>
+      <p>Meet the team behind this project.</p>
+    </div>
+
+    <div class="cards-row">
+      <div class="card">
+        <div class="avatar">RV</div>
+        <p class="name">Rishi Verma</p>
+        <p class="role">Project Manager</p>
+        <p class="blurb">Coordinates planning, team delivery, communication and sign-off.</p>
+      </div>
+      <div class="card">
+        <div class="avatar">AB</div>
+        <p class="name">Aditya Barot</p>
+        <p class="role">Business Analyst</p>
+        <p class="blurb">Defines requirements, validates design against requirements.</p>
+      </div>
+      <div class="card">
+        <div class="avatar">AS</div>
+        <p class="name">Abin Siju</p>
+        <p class="role">UX Designer</p>
+        <p class="blurb">Designs the visual experience and layouts for the login and team pages.</p>
+      </div>
+      <div class="card edge">
+        <div class="avatar">TL</div>
+        <p class="name">Tom Lynch</p>
+        <p class="role">Developer</p>
+        <p class="blurb">This is a deliberately long test blurb used to confirm the card expands and wraps cleanly instead of truncating, overlapping neighbouring cards, or breaking the row layout — per the BA-approved long-blurb edge case (EC-04).</p>
+        <p class="edge-note">Edge case: long blurb → card expands, no truncation</p>
+      </div>
+      <div class="card">
+        <div class="avatar">VB</div>
+        <p class="name">Varinder Pal Singh Bhatti</p>
+        <p class="role">Developer</p>
+        <p class="blurb">Supports implementation and independent testing activities.</p>
+      </div>
+    </div>
+  </div>
+
+<script>
+  function showTeam(){
+    document.getElementById('login-screen').classList.remove('active');
+    document.getElementById('team-screen').classList.add('active');
+  }
+  function showLogin(){
+    document.getElementById('team-screen').classList.remove('active');
+    document.getElementById('login-screen').classList.add('active');
+    document.getElementById('error-msg').classList.remove('show');
+  }
+  function attemptSignIn(){
+    // Prototype only — real auth/validation logic is unchanged and lives in the boilerplate.
+    showTeam();
+  }
+  function toggleError(){
+    document.getElementById('error-msg').classList.toggle('show');
+  }
+</script>
+</body>
+</html>
