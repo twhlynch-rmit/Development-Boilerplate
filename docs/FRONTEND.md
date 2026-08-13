@@ -14,11 +14,11 @@ Next.js 16 App Router with React 19, TypeScript (strict), and Tailwind CSS v4.
 
 ### Route Groups
 
-| Group | Path | Purpose |
-|-------|------|---------|
-| `(auth)` | `/auth/signin`, `/auth/signup` | Minimal centered layout, no sidebar |
-| `(dashboard)` | `/dashboard`, `/profile`, `/settings` | Full app shell with sidebar + navbar |
-| _(root)_ | `/` | Landing/marketing page |
+| Group         | Path                                           | Purpose                              |
+| ------------- | ---------------------------------------------- | ------------------------------------ |
+| `(auth)`      | `/auth/signin`, `/auth/signup`                 | Minimal centered layout, no sidebar  |
+| `(dashboard)` | `/dashboard`, `/team`, `/profile`, `/settings` | Full app shell with sidebar + navbar |
+| _(root)_      | `/`                                            | Landing/marketing page               |
 
 ### Feature Modules
 
@@ -39,12 +39,12 @@ Use the `/new-feature` skill to scaffold this structure.
 
 ### Data Fetching
 
-| Context | Method | When |
-|---------|--------|------|
-| Server Component | `adminDb.collection(...).get()` | One-time, SSR |
-| Client Component | `useCollection()` hook | Real-time subscription |
-| Server Action | `adminDb` + `requireAuth()` | Mutations |
-| Route Handler | `adminAuth.verifySessionCookie()` | Session management |
+| Context          | Method                            | When                   |
+| ---------------- | --------------------------------- | ---------------------- |
+| Server Component | `adminDb.collection(...).get()`   | One-time, SSR          |
+| Client Component | `useCollection()` hook            | Real-time subscription |
+| Server Action    | `adminDb` + `requireAuth()`       | Mutations              |
+| Route Handler    | `adminAuth.verifySessionCookie()` | Session management     |
 
 ### Styling
 
@@ -62,9 +62,9 @@ import { cn } from '@/lib/utils'
 ## Authentication UI Flow
 
 ```
-/ (landing) → /auth/signin → /dashboard
+/ (landing) → /auth/signin → /team
                   ↓
-             /auth/signup → /dashboard
+             /auth/signup → /team
 ```
 
 - `AuthProvider` listens to `onAuthStateChanged` — wraps the root layout
@@ -74,6 +74,7 @@ import { cn } from '@/lib/utils'
 ## Adding a Page
 
 Use the `/new-page` skill. Key checklist:
+
 - Correct route group (`(auth)` or `(dashboard)`)
 - Export `metadata` object
 - Call `requireAuth()` in protected pages
